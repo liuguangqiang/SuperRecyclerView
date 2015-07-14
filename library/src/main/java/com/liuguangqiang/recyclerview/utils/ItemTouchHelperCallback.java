@@ -16,6 +16,8 @@
 
 package com.liuguangqiang.recyclerview.utils;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
@@ -24,29 +26,68 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  */
 public class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
-    public ItemTouchHelperCallback() {
+    private ItemTouchHelperAdapter adapter;
+
+    private boolean swipeEnable = false;
+    private boolean dragEnable = false;
+
+    public ItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         super(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+        this.adapter = adapter;
+    }
+
+    public void setSwipeEnable(boolean swipeEnable) {
+        this.swipeEnable = swipeEnable;
+    }
+
+    public void setDragEnable(boolean dragEnable) {
+        this.dragEnable = dragEnable;
     }
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return true;
+        return dragEnable;
     }
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return true;
+        return swipeEnable;
     }
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        return false;
+        if (viewHolder.getItemViewType() != target.getItemViewType()) return false;
+
+        adapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        return true;
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
+        adapter.onItemDismiss(viewHolder.getAdapterPosition());
     }
 
+    @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            float width = viewHolder.itemView.getWidth();
+            viewHolder.itemView.setAlpha(1.0f - Math.abs(dX) / width);
+        }
+    }
+
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+        super.onSelectedChanged(viewHolder, actionState);
+        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+            viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
+        }
+    }
+
+    @Override
+    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+        viewHolder.itemView.setBackgroundColor(0);
+    }
 }
