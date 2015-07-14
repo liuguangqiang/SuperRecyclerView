@@ -10,18 +10,18 @@ import java.util.List;
 
 /**
  * A RecyclerView.Adapter that allows for headers and footers as well.
- * <p/>
+ * <p>
  * This class wraps a base adapter that's passed into the constructor. It works by creating extra view items types
  * that are returned in {@link #getItemViewType(int)}, and mapping these to the header and footer views provided via
  * {@link #addHeader(View)} and {@link #addFooter(View)}.
- * <p/>
+ * <p>
  * There are two restrictions when using this class:
- * <p/>
+ * <p>
  * 1) The base adapter can't use negative view types, since this class uses negative view types to keep track
  * of header and footer views.
- * <p/>
+ * <p>
  * 2) You can't add more than 1000 headers or footers.
- * <p/>
+ * <p>
  * Created by mlapadula on 12/15/14.
  */
 public class Bookends<T extends RecyclerView.Adapter> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -30,12 +30,12 @@ public class Bookends<T extends RecyclerView.Adapter> extends RecyclerView.Adapt
 
     /**
      * Defines available view type integers for headers and footers.
-     * <p/>
+     * <p>
      * How this works:
      * - Regular views use view types starting from 0, counting upwards
      * - Header views use view types starting from -1000, counting upwards
      * - Footer views use view types starting from -2000, counting upwards
-     * <p/>
+     * <p>
      * This means that you're safe as long as the base adapter doesn't use negative view types,
      * and as long as you have fewer than 1000 headers and footers
      */
@@ -91,12 +91,28 @@ public class Bookends<T extends RecyclerView.Adapter> extends RecyclerView.Adapt
         }
     }
 
+    public void setHeaderVisibility(View view, boolean shouldShow) {
+        for (View header : mHeaders) {
+            if (header == view) {
+                header.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
+            }
+        }
+    }
+
     /**
      * Toggles the visibility of the footer views.
      */
     public void setFooterVisibility(boolean shouldShow) {
         for (View footer : mFooters) {
             footer.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void setFooterVisibility(View view, boolean shouldShow) {
+        for (View footer : mFooters) {
+            if (footer == view) {
+                footer.setVisibility(shouldShow ? View.VISIBLE : View.GONE);
+            }
         }
     }
 

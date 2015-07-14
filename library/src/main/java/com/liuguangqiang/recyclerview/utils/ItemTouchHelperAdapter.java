@@ -21,7 +21,7 @@ package com.liuguangqiang.recyclerview.utils;
  */
 public interface ItemTouchHelperAdapter {
 
-    void onItemDismiss();
+    void onItemDismiss(int position);
 
     void onItemMove(int fromPosition, int targetPosition);
 
