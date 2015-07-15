@@ -16,7 +16,6 @@
 
 package com.liuguangqiang.recyclerview.sample;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import java.util.List;
@@ -24,20 +23,14 @@ import java.util.List;
 /**
  * Created by Eric on 15/6/6.
  */
-@JsonObject
+@JsonObject(fieldDetectionPolicy = JsonObject.FieldDetectionPolicy.NONPRIVATE_FIELDS_AND_ACCESSORS)
 public class Daily {
 
-    @JsonField
     private int id;
 
-    @JsonField
-    private int date;
+    private int date = 0;
 
-    @JsonField
     private List<Story> stories;
-
-    @JsonField
-    private List<Story> top_stories;
 
     public int getDate() {
         return date;
@@ -61,14 +54,6 @@ public class Daily {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public List<Story> getTop_stories() {
-        return top_stories;
-    }
-
-    public void setTop_stories(List<Story> top_stories) {
-        this.top_stories = top_stories;
     }
 
 }

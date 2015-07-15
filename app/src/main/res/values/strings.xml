@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RecyclerView</string>
+    <string name="app_name">SuperRecyclerView</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

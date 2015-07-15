@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.liuguangqiang.recyclerview.utils.ItemTouchHelperAdapter;
+import com.liuguangqiang.recyclerview.widget.SuperRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +40,7 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
 
     public OnItemClickListener onItemClickListener;
     public OnItemLongClickListener onItemLongClickListener;
+    private SuperRecyclerView recyclerView;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -100,13 +102,17 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
     @Override
     public void onItemDismiss(int position) {
         data.remove(position);
-        notifyItemRemoved(position);
+        recyclerView.getBookendsAdapter().notifyItemRemoved(position);
     }
 
     @Override
     public void onItemMove(int fromPosition, int targetPosition) {
         Collections.swap(data, fromPosition, targetPosition);
-        notifyItemMoved(fromPosition, targetPosition);
+        recyclerView.getBookendsAdapter().notifyItemMoved(fromPosition, targetPosition);
+    }
+
+    public void setRecyclerView(SuperRecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
     }
 
     public interface OnItemClickListener {

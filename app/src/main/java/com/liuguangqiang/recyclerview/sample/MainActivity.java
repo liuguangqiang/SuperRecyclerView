@@ -1,5 +1,6 @@
 package com.liuguangqiang.recyclerview.sample;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements OnPageListener {
 
     private void initViews() {
         recyclerView = (SuperRecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLoadingFooter(R.layout.layout_loading_footer);
         adapter = new StoryAdapter(getApplicationContext(), data);
         recyclerView.setAdapter(adapter);
         recyclerView.setOnPageListener(this);
@@ -46,15 +46,17 @@ public class MainActivity extends AppCompatActivity implements OnPageListener {
             @Override
             public void onSuccess(Daily daily) {
                 if (daily != null) {
-                    lastDatetime = daily.getId();
-                    data.addAll(daily.getTop_stories());
-                    recyclerView.notifyDataSetChanged();
-                }
-            }
+                    lastDatetime = daily.getDate();
+                    data.addAll(daily.getStories());
 
-            @Override
-            public void onFinish() {
-                recyclerView.onLoadFinish();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.notifyDataSetChanged();
+                            recyclerView.onLoadFinish();
+                        }
+                    }, 1000);
+                }
             }
 
             @Override
