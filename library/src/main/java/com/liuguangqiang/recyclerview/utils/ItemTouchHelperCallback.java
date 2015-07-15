@@ -28,8 +28,13 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
     private ItemTouchHelperAdapter adapter;
 
-    private boolean swipeEnable = false;
-    private boolean dragEnable = false;
+    private boolean swipeEnabled = false;
+    private boolean dragEnabled = false;
+    private int selectedColor = Color.LTGRAY;
+
+    public ItemTouchHelperCallback() {
+        this(null);
+    }
 
     public ItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         super(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
@@ -37,22 +42,30 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
         this.adapter = adapter;
     }
 
-    public void setSwipeEnable(boolean swipeEnable) {
-        this.swipeEnable = swipeEnable;
+    public void setAdapter(ItemTouchHelperAdapter adapter) {
+        this.adapter = adapter;
     }
 
-    public void setDragEnable(boolean dragEnable) {
-        this.dragEnable = dragEnable;
+    public void setSwipeEnabled(boolean swipeEnabled) {
+        this.swipeEnabled = swipeEnabled;
+    }
+
+    public void setDragEnabled(boolean dragEnabled) {
+        this.dragEnabled = dragEnabled;
+    }
+
+    public void setSelectedColor(int color) {
+        this.selectedColor = color;
     }
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return dragEnable;
+        return dragEnabled;
     }
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return swipeEnable;
+        return swipeEnabled;
     }
 
     @Override
@@ -81,7 +94,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
+            viewHolder.itemView.setBackgroundColor(selectedColor);
         }
     }
 

@@ -3,8 +3,8 @@
 <resources>
 
     <declare-styleable name="SuperRecyclerView">
-        <attr name="swipeEnable" format="boolean" />
-        <attr name="dragEnable" format="boolean" />
+        <attr name="swipe_enabled" format="boolean" />
+        <attr name="drag_enabled" format="boolean" />
         <attr name="loading_footer" format="reference"></attr>
         <attr name="selected_color" format="color" />
     </declare-styleable>

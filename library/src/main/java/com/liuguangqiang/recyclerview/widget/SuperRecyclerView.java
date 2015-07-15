@@ -65,29 +65,29 @@ public class SuperRecyclerView extends LinearRecyclerView implements LinearRecyc
 
     private void loadStyledAttr(Context context, AttributeSet attrs, int defStyle) {
         final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SuperRecyclerView, defStyle, 0);
-        boolean swipeEnable = typedArray.getBoolean(R.styleable.SuperRecyclerView_swipeEnable, false);
-        boolean dragEnable = typedArray.getBoolean(R.styleable.SuperRecyclerView_dragEnable, false);
+        boolean swipeEnabled = typedArray.getBoolean(R.styleable.SuperRecyclerView_swipe_enabled, false);
+        boolean dragEnabled = typedArray.getBoolean(R.styleable.SuperRecyclerView_drag_enabled, false);
         int loadingFooterResId = typedArray.getResourceId(R.styleable.SuperRecyclerView_loading_footer, 0);
         int selectedColor = typedArray.getColor(R.styleable.SuperRecyclerView_selected_color, Color.LTGRAY);
         typedArray.recycle();
 
-        setSwipeEnable(swipeEnable);
-        setDragEnable(dragEnable);
+        setSwipeEnabled(swipeEnabled);
+        setDragEnabled(dragEnabled);
         setSelectedColor(selectedColor);
         if (loadingFooterResId > 0) {
             setLoadingFooter(loadingFooterResId);
         }
     }
 
-    public void setSwipeEnable(boolean swipeEnable) {
+    public void setSwipeEnabled(boolean swipeEnable) {
         if (itemTouchHelperCallback != null) {
-            itemTouchHelperCallback.setSwipeEnable(swipeEnable);
+            itemTouchHelperCallback.setSwipeEnabled(swipeEnable);
         }
     }
 
-    public void setDragEnable(boolean dragEnable) {
+    public void setDragEnabled(boolean dragEnable) {
         if (itemTouchHelperCallback != null) {
-            itemTouchHelperCallback.setDragEnable(dragEnable);
+            itemTouchHelperCallback.setDragEnabled(dragEnable);
         }
     }
 
