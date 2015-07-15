@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <declare-styleable name="SuperRecyclerView">
+        <attr name="swipeEnable" format="boolean" />
+        <attr name="dragEnable" format="boolean" />
+        <attr name="loading_footer" format="integer"></attr>
+    </declare-styleable>
+
+</resources>

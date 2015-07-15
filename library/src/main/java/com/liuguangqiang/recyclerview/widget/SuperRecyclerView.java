@@ -17,11 +17,13 @@
 package com.liuguangqiang.recyclerview.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.liuguangqiang.recyclerview.R;
 import com.liuguangqiang.recyclerview.adapter.BaseAdapter;
 import com.liuguangqiang.recyclerview.adapter.Bookends;
 import com.liuguangqiang.recyclerview.listener.OnPageListener;
@@ -37,42 +39,57 @@ public class SuperRecyclerView extends LinearRecyclerView implements LinearRecyc
     private boolean isLoading = false;
     private ItemTouchHelperCallback itemTouchHelperCallback;
     private Bookends bookends;
-    private BaseAdapter adapter;
-    private OnPageListener listener;
+    private OnPageListener onPageListener;
 
     public SuperRecyclerView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public SuperRecyclerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public SuperRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
+        loadStyledAttr(context, attrs, defStyle);
     }
 
     private void init() {
+        itemTouchHelperCallback = new ItemTouchHelperCallback();
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(this);
         setOnScrollPositionListener(this);
     }
 
+    private void loadStyledAttr(Context context, AttributeSet attrs, int defStyle) {
+        final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SuperRecyclerView, defStyle, 0);
+        boolean swipeEnable = typedArray.getBoolean(R.styleable.SuperRecyclerView_swipeEnable, false);
+        boolean dragEnable = typedArray.getBoolean(R.styleable.SuperRecyclerView_dragEnable, false);
+        int loadingFooter = typedArray.getInt(R.styleable.SuperRecyclerView_loading_footer, 0);
+        typedArray.recycle();
+
+        setSwipeEnable(swipeEnable);
+        setDragEnable(dragEnable);
+        if (loadingFooter > 0) {
+            setLoadingFooter(loadingFooter);
+        }
+    }
+
     public void setSwipeEnable(boolean swipeEnable) {
-        if (this.itemTouchHelperCallback != null) {
+        if (itemTouchHelperCallback != null) {
             itemTouchHelperCallback.setSwipeEnable(swipeEnable);
         }
     }
 
     public void setDragEnable(boolean dragEnable) {
-        if (this.itemTouchHelperCallback != null) {
+        if (itemTouchHelperCallback != null) {
             itemTouchHelperCallback.setDragEnable(dragEnable);
         }
     }
 
     public void setOnPageListener(OnPageListener pageListener) {
-        this.listener = pageListener;
+        this.onPageListener = pageListener;
     }
 
     @Override
@@ -81,9 +98,9 @@ public class SuperRecyclerView extends LinearRecyclerView implements LinearRecyc
 
     @Override
     public void onScrollToBottom() {
-        if (listener != null && !isLoading) {
+        if (onPageListener != null && !isLoading) {
             onLoadStart();
-            listener.onPage();
+            onPageListener.onPage();
         }
     }
 
@@ -92,17 +109,12 @@ public class SuperRecyclerView extends LinearRecyclerView implements LinearRecyc
     }
 
     public void setAdapter(BaseAdapter adapter) {
-        this.adapter = adapter;
         adapter.setRecyclerView(this);
         bookends = new Bookends(adapter);
         addLoadingFooter();
         super.setAdapter(bookends);
-
-        itemTouchHelperCallback = new ItemTouchHelperCallback(adapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
-        itemTouchHelper.attachToRecyclerView(this);
+        itemTouchHelperCallback.setAdapter(adapter);
     }
-
 
     public Bookends<?> getBookendsAdapter() {
         return bookends;
@@ -137,11 +149,11 @@ public class SuperRecyclerView extends LinearRecyclerView implements LinearRecyc
     }
 
     public void setLoadingFooter(View view) {
-        this.loadingFooter = view;
+        loadingFooter = view;
     }
 
     public void setLoadingFooter(int resId) {
-        this.loadingFooter = LayoutInflater.from(getContext()).inflate(resId, null);
+        loadingFooter = LayoutInflater.from(getContext()).inflate(resId, null);
     }
 
     private void addLoadingFooter() {
