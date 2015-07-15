@@ -10,6 +10,12 @@ A extension of the RecyclerView that using it more easy.
 * Load more data.
 * Add header and footer view.
 
+## Attributes
+* swipe_enabled
+* drag_enabled
+* loading_footer
+* selected_color
+
 ## Usage
 
 ## License
