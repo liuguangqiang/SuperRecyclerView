@@ -18,6 +18,7 @@ package com.liuguangqiang.recyclerview.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -66,13 +67,15 @@ public class SuperRecyclerView extends LinearRecyclerView implements LinearRecyc
         final TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SuperRecyclerView, defStyle, 0);
         boolean swipeEnable = typedArray.getBoolean(R.styleable.SuperRecyclerView_swipeEnable, false);
         boolean dragEnable = typedArray.getBoolean(R.styleable.SuperRecyclerView_dragEnable, false);
-        int loadingFooter = typedArray.getInt(R.styleable.SuperRecyclerView_loading_footer, 0);
+        int loadingFooterResId = typedArray.getResourceId(R.styleable.SuperRecyclerView_loading_footer, 0);
+        int selectedColor = typedArray.getColor(R.styleable.SuperRecyclerView_selected_color, Color.LTGRAY);
         typedArray.recycle();
 
         setSwipeEnable(swipeEnable);
         setDragEnable(dragEnable);
-        if (loadingFooter > 0) {
-            setLoadingFooter(loadingFooter);
+        setSelectedColor(selectedColor);
+        if (loadingFooterResId > 0) {
+            setLoadingFooter(loadingFooterResId);
         }
     }
 
@@ -86,6 +89,10 @@ public class SuperRecyclerView extends LinearRecyclerView implements LinearRecyc
         if (itemTouchHelperCallback != null) {
             itemTouchHelperCallback.setDragEnable(dragEnable);
         }
+    }
+
+    public void setSelectedColor(int color) {
+        itemTouchHelperCallback.setSelectedColor(color);
     }
 
     public void setOnPageListener(OnPageListener pageListener) {
