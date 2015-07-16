@@ -17,6 +17,22 @@ A extension of the RecyclerView that using it more easy.
 * selected_color
 
 ## Usage
+### Gradle
+```
+dependencies {
+    compile 'com.github.liuguangqiang.SuperRecyclerView:super-recyclerview:0.1.0'
+}
+```
+
+### Maven
+```
+<dependency>
+  <groupId>com.github.liuguangqiang.SuperRecyclerView</groupId>
+  <artifactId>super-recyclerview</artifactId>
+  <version>0.1.0</version>
+  <type>aar</type>
+</dependency>
+```
 
 ## License
     Copyright 2015 Eric Liu
