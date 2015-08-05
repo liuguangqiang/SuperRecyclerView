@@ -10,9 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        app:dragEnabled="true"
+        app:drag_enabled="true"
         app:loading_footer="@layout/layout_loading_footer"
         app:selected_color="@android:color/holo_blue_light"
-        app:swipeEnabled="true" />
+        app:swipe_enabled="true" />
 
 </RelativeLayout>
