@@ -38,10 +38,16 @@ public class LinearRecyclerView extends RecyclerView {
     private int totalItemCount;
 
     private LinearLayoutManager layoutManager;
+
     private OnScrollPositionListener onScrollPositionListener;
+    private OnScrollListener onScrollListener;
 
     public void setOnScrollPositionListener(OnScrollPositionListener listener) {
         onScrollPositionListener = listener;
+    }
+
+    public void setOnScrollListener(OnScrollListener listener) {
+        onScrollListener = listener;
     }
 
     public LinearRecyclerView(Context context) {
@@ -69,6 +75,10 @@ public class LinearRecyclerView extends RecyclerView {
                     if (isBottom) onScrollPositionListener.onScrollToBottom();
                     if (isTop) onScrollPositionListener.onScrollToTop();
                 }
+
+                if (onScrollListener != null) {
+                    onScrollListener.onScrollStateChanged(recyclerView, newState);
+                }
             }
 
             @Override
@@ -81,16 +91,24 @@ public class LinearRecyclerView extends RecyclerView {
                     isBottom = (firstVisibleItem + visibleItemCount) >= (totalItemCount - 1);
                     isTop = firstVisibleItem == 0;
                 }
+
+                if (onScrollListener != null) {
+                    onScrollListener.onScrolled(recyclerView, dx, dy);
+                }
             }
         });
     }
 
     public interface OnScrollPositionListener {
-
         void onScrollToTop();
 
         void onScrollToBottom();
+    }
 
+    public interface OnScrollListener {
+        void onScrollStateChanged(RecyclerView recyclerView, int newState);
+
+        void onScrolled(RecyclerView recyclerView, int dx, int dy);
     }
 
 }
