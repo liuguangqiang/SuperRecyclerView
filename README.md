@@ -20,7 +20,7 @@ A extension of the RecyclerView that using it more easy.
 ### Gradle
 ```
 dependencies {
-    compile 'com.github.liuguangqiang.SuperRecyclerView:super-recyclerview:0.1.0'
+    compile 'com.github.liuguangqiang.SuperRecyclerView:super-recyclerview:+'
 }
 ```
 
@@ -29,7 +29,7 @@ dependencies {
 <dependency>
   <groupId>com.github.liuguangqiang.SuperRecyclerView</groupId>
   <artifactId>super-recyclerview</artifactId>
-  <version>0.1.0</version>
+  <version>{ lastest version }</version>
   <type>aar</type>
 </dependency>
 ```

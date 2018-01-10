@@ -56,6 +56,10 @@ public class SuperRecyclerView extends LinearRecyclerView implements LinearRecyc
         loadStyledAttr(context, attrs, defStyle);
     }
 
+    public boolean isLoading() {
+        return isLoading;
+    }
+
     private void init() {
         itemTouchHelperCallback = new ItemTouchHelperCallback();
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
