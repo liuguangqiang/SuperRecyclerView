@@ -14,25 +14,22 @@
  *  limitations under the License.
  */
 
-package com.liuguangqiang.recyclerview.adapter;
+package com.liuguangqiang.recyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.liuguangqiang.recyclerview.utils.ItemTouchHelperAdapter;
-import com.liuguangqiang.recyclerview.widget.SuperRecyclerView;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Eric on 15/7/7.
+ * A base adapter that is able to listen the click or long click events.
+ * <p>
+ * Created by Eric on 2017/7/6.
  */
-public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements ItemTouchHelperAdapter {
+public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     public Context mContext;
     public List<T> data = new ArrayList<>();
@@ -40,7 +37,6 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
 
     public OnItemClickListener onItemClickListener;
     public OnItemLongClickListener onItemLongClickListener;
-    private SuperRecyclerView recyclerView;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -72,7 +68,7 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onItemClickListener.onItemClick(position);
+                        onItemClickListener.onItemClick(v, position);
                     }
                 });
             }
@@ -81,7 +77,7 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onItemLongClickListener.onItemLongClick(position);
+                        onItemLongClickListener.onItemLongClick(v, position);
                         return false;
                     }
                 });
@@ -99,33 +95,14 @@ public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends
         super.onViewRecycled(holder);
     }
 
-    @Override
-    public void onItemDismiss(int position) {
-        data.remove(position);
-        recyclerView.getBookendsAdapter().notifyItemRemoved(position);
-    }
-
-    @Override
-    public void onItemMove(int fromPosition, int targetPosition) {
-        Collections.swap(data, fromPosition, targetPosition);
-        recyclerView.getBookendsAdapter().notifyItemMoved(fromPosition, targetPosition);
-    }
-
-    public void setRecyclerView(SuperRecyclerView recyclerView) {
-        this.recyclerView = recyclerView;
-    }
-
     public interface OnItemClickListener {
 
-        void onItemClick(int position);
-
+        void onItemClick(View view, int position);
     }
 
     public interface OnItemLongClickListener {
 
-        void onItemLongClick(int position);
-
+        void onItemLongClick(View view, int position);
     }
-
 
 }

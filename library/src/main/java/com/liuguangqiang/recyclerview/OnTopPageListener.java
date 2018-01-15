@@ -14,15 +14,13 @@
  *  limitations under the License.
  */
 
-package com.liuguangqiang.recyclerview.utils;
+package com.liuguangqiang.recyclerview;
 
 /**
- * Created by Eric on 15/7/14.
+ * Created by Eric on 2017/7/6.
  */
-public interface ItemTouchHelperAdapter {
+public interface OnTopPageListener {
 
-    void onItemDismiss(int position);
-
-    void onItemMove(int fromPosition, int targetPosition);
+    void onTopPage();
 
 }

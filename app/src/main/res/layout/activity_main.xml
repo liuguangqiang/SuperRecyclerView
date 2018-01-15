@@ -1,18 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".MainActivity">
+
+  <com.liuguangqiang.recyclerview.SuperRecyclerView
+    android:id="@+id/recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <com.liuguangqiang.recyclerview.widget.SuperRecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        app:drag_enabled="true"
-        app:loading_footer="@layout/layout_loading_footer"
-        app:selected_color="@android:color/holo_blue_light"
-        app:swipe_enabled="true" />
+    android:scrollbars="vertical" />
 
 </RelativeLayout>

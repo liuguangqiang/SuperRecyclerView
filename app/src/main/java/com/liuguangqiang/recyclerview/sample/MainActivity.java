@@ -16,27 +16,22 @@
 
 package com.liuguangqiang.recyclerview.sample;
 
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.app.AppCompatActivity;
 import com.liuguangqiang.asyncokhttp.AsyncOkHttp;
 import com.liuguangqiang.asyncokhttp.JsonResponseHandler;
-import com.liuguangqiang.recyclerview.listener.OnPageListener;
-import com.liuguangqiang.recyclerview.widget.DividerItemDecoration;
-import com.liuguangqiang.recyclerview.widget.LinearRecyclerView;
-import com.liuguangqiang.recyclerview.widget.SuperRecyclerView;
-
+import com.liuguangqiang.recyclerview.OnPageListener;
+import com.liuguangqiang.recyclerview.SuperRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnPageListener {
+public class MainActivity extends AppCompatActivity implements OnPageListener, OnRefreshListener {
 
   private SuperRecyclerView recyclerView;
   private List<Story> data = new ArrayList<>();
   private StoryAdapter adapter;
-
   private int lastDatetime = 0;
 
   @Override
@@ -52,18 +47,8 @@ public class MainActivity extends AppCompatActivity implements OnPageListener {
     adapter = new StoryAdapter(getApplicationContext(), data);
     recyclerView.setAdapter(adapter);
     recyclerView.setOnPageListener(this);
-    recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
-    recyclerView.setOnScrollListener(new LinearRecyclerView.OnScrollListener() {
-      @Override
-      public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-
-      }
-
-      @Override
-      public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
-      }
-    });
+    recyclerView.setOnRefreshListener(this);
+    recyclerView.setAutoRefresh(true);
   }
 
   @Override
@@ -71,11 +56,21 @@ public class MainActivity extends AppCompatActivity implements OnPageListener {
     getDaily(lastDatetime);
   }
 
-  public void getDaily(int datetime) {
+  @Override
+  public void onRefresh() {
+    lastDatetime = 0;
+    getDaily(lastDatetime);
+  }
+
+  public void getDaily(final int datetime) {
     String url = datetime > 0 ? ApiUtils.getNewsBefore(datetime) : ApiUtils.getLatest();
     AsyncOkHttp.getInstance().get(url, new JsonResponseHandler<Daily>(Daily.class) {
       @Override
       public void onSuccess(Daily daily) {
+        if (datetime == 0) {
+          data.clear();
+        }
+
         if (daily != null) {
           lastDatetime = daily.getDate();
           data.addAll(daily.getStories());
@@ -84,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnPageListener {
             @Override
             public void run() {
               recyclerView.notifyDataSetChanged();
-              recyclerView.onLoadFinish();
+              recyclerView.onRequestFinished();
             }
           }, 1000);
         }
@@ -93,9 +88,8 @@ public class MainActivity extends AppCompatActivity implements OnPageListener {
       @Override
       public void onStart() {
         super.onStart();
-        recyclerView.onLoadStart();
+        recyclerView.startLoading();
       }
     });
   }
-
 }

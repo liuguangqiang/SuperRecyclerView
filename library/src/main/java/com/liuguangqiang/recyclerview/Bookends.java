@@ -1,10 +1,9 @@
-package com.liuguangqiang.recyclerview.adapter;
+package com.liuguangqiang.recyclerview;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,6 @@ import java.util.List;
  * <p>
  * 2) You can't add more than 1000 headers or footers.
  * <p>
- * Created by mlapadula on 12/15/14.
  */
 public class Bookends<T extends RecyclerView.Adapter> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -80,6 +78,20 @@ public class Bookends<T extends RecyclerView.Adapter> extends RecyclerView.Adapt
             throw new IllegalArgumentException("You can't have a null footer!");
         }
         mFooters.add(view);
+    }
+
+    public void removeHeader(@NonNull View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("You can't remove a null header!");
+        }
+        mHeaders.remove(view);
+    }
+
+    public void removeFooter(@NonNull View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("You can't remove a null footer!");
+        }
+        mFooters.remove(view);
     }
 
     /**

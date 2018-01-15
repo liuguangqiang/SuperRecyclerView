@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-package com.liuguangqiang.recyclerview.listener;
+package com.liuguangqiang.recyclerview;
 
 /**
- * Created by Eric on 15/7/7.
+ * Created by Eric on 2017/7/6.
  */
 public interface OnPageListener {
 
