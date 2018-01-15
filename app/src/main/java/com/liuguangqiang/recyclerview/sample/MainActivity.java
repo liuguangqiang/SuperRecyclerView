@@ -33,69 +33,69 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnPageListener {
 
-    private SuperRecyclerView recyclerView;
-    private List<Story> data = new ArrayList<>();
-    private StoryAdapter adapter;
+  private SuperRecyclerView recyclerView;
+  private List<Story> data = new ArrayList<>();
+  private StoryAdapter adapter;
 
-    private int lastDatetime = 0;
+  private int lastDatetime = 0;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initViews();
-        getDaily(lastDatetime);
-    }
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    initViews();
+    getDaily(lastDatetime);
+  }
 
-    private void initViews() {
-        recyclerView = (SuperRecyclerView) findViewById(R.id.recycler_view);
-        adapter = new StoryAdapter(getApplicationContext(), data);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setOnPageListener(this);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
-        recyclerView.setOnScrollListener(new LinearRecyclerView.OnScrollListener() {
+  private void initViews() {
+    recyclerView = findViewById(R.id.recycler_view);
+    adapter = new StoryAdapter(getApplicationContext(), data);
+    recyclerView.setAdapter(adapter);
+    recyclerView.setOnPageListener(this);
+    recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext()));
+    recyclerView.setOnScrollListener(new LinearRecyclerView.OnScrollListener() {
+      @Override
+      public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+      }
+
+      @Override
+      public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+      }
+    });
+  }
+
+  @Override
+  public void onPage() {
+    getDaily(lastDatetime);
+  }
+
+  public void getDaily(int datetime) {
+    String url = datetime > 0 ? ApiUtils.getNewsBefore(datetime) : ApiUtils.getLatest();
+    AsyncOkHttp.getInstance().get(url, new JsonResponseHandler<Daily>(Daily.class) {
+      @Override
+      public void onSuccess(Daily daily) {
+        if (daily != null) {
+          lastDatetime = daily.getDate();
+          data.addAll(daily.getStories());
+
+          new Handler().postDelayed(new Runnable() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-
+            public void run() {
+              recyclerView.notifyDataSetChanged();
+              recyclerView.onLoadFinish();
             }
+          }, 1000);
+        }
+      }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onPage() {
-        getDaily(lastDatetime);
-    }
-
-    public void getDaily(int datetime) {
-        String url = datetime > 0 ? ApiUtils.getNewsBefore(datetime) : ApiUtils.getLatest();
-        AsyncOkHttp.getInstance().get(url, new JsonResponseHandler<Daily>(Daily.class) {
-            @Override
-            public void onSuccess(Daily daily) {
-                if (daily != null) {
-                    lastDatetime = daily.getDate();
-                    data.addAll(daily.getStories());
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.notifyDataSetChanged();
-                            recyclerView.onLoadFinish();
-                        }
-                    }, 1000);
-                }
-            }
-
-            @Override
-            public void onStart() {
-                super.onStart();
-                recyclerView.onLoadStart();
-            }
-        });
-    }
+      @Override
+      public void onStart() {
+        super.onStart();
+        recyclerView.onLoadStart();
+      }
+    });
+  }
 
 }
