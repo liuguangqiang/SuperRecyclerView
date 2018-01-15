@@ -74,18 +74,6 @@ public class SuperRecyclerView extends RelativeLayout implements
     refreshLayout = findViewById(R.id.refreshLayout);
     refreshLayout.setOnRefreshListener(this);
     refreshLayout.setEnabled(refreshable);
-    if (autoRefresh) {
-      refreshLayout.getViewTreeObserver()
-          .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-              refreshLayout.getViewTreeObserver().removeOnPreDrawListener(this);
-              refreshLayout.setRefreshing(true);
-              return true;
-            }
-          });
-    }
-
     recyclerView = findViewById(R.id.recyclerView);
     recyclerView.setPageFooter(R.layout.footer_loading);
     recyclerView.setOnPageListener(this);
@@ -118,7 +106,17 @@ public class SuperRecyclerView extends RelativeLayout implements
 
   public void setAutoRefresh(boolean autoRefresh) {
     this.autoRefresh = autoRefresh;
-    if (!autoRefresh) {
+    if (autoRefresh) {
+      refreshLayout.getViewTreeObserver()
+          .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+              refreshLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+              refreshLayout.setRefreshing(true);
+              return true;
+            }
+          });
+    } else {
       refreshLayout.setRefreshing(false);
     }
   }
@@ -162,22 +160,19 @@ public class SuperRecyclerView extends RelativeLayout implements
     }
   }
 
+  public boolean isLoading() {
+    return isLoading;
+  }
+
   public void startLoading() {
-    setIsLoading(true);
+    isLoading = true;
+    recyclerView.setIsLoading(true);
   }
 
-  public void endLoading() {
-    setIsLoading(false);
-  }
-
-  public void setIsLoading(boolean isLoading) {
-    this.isLoading = isLoading;
-    recyclerView.setIsLoading(isLoading);
-  }
-
-  public void onRequestFinished() {
+  protected void onLoadingFinished() {
     refreshLayout.setRefreshing(false);
-    setIsLoading(false);
+    isLoading = false;
+    recyclerView.setIsLoading(false);
     chkEmpty();
   }
 
@@ -196,7 +191,7 @@ public class SuperRecyclerView extends RelativeLayout implements
       }
     }
 
-    onRequestFinished();
+    onLoadingFinished();
     recyclerView.notifyDataSetChanged();
   }
 

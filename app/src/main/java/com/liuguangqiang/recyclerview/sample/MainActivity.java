@@ -20,14 +20,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import com.liuguangqiang.asyncokhttp.AsyncOkHttp;
 import com.liuguangqiang.asyncokhttp.JsonResponseHandler;
+import com.liuguangqiang.recyclerview.BaseAdapter.OnItemClickListener;
 import com.liuguangqiang.recyclerview.OnPageListener;
 import com.liuguangqiang.recyclerview.SuperRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnPageListener, OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements OnPageListener, OnRefreshListener,
+    OnItemClickListener {
 
   private SuperRecyclerView recyclerView;
   private List<Story> data = new ArrayList<>();
@@ -49,15 +53,18 @@ public class MainActivity extends AppCompatActivity implements OnPageListener, O
     recyclerView.setOnPageListener(this);
     recyclerView.setOnRefreshListener(this);
     recyclerView.setAutoRefresh(true);
+    recyclerView.setOnItemClickListener(this);
   }
 
   @Override
   public void onPage() {
+    Log.d("test", "onPage");
     getDaily(lastDatetime);
   }
 
   @Override
   public void onRefresh() {
+    Log.d("test", "onRefresh");
     lastDatetime = 0;
     getDaily(lastDatetime);
   }
@@ -79,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements OnPageListener, O
             @Override
             public void run() {
               recyclerView.notifyDataSetChanged();
-              recyclerView.onRequestFinished();
             }
           }, 1000);
         }
@@ -91,5 +97,10 @@ public class MainActivity extends AppCompatActivity implements OnPageListener, O
         recyclerView.startLoading();
       }
     });
+  }
+
+  @Override
+  public void onItemClick(View view, int position) {
+    Log.d("test", "onItemClick:" + data.get(position).getTitle());
   }
 }
